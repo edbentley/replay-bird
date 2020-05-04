@@ -18,11 +18,17 @@ export const Level = makeSprite<{}, LevelState, WebInputs | iOSInputs>({
     };
   },
 
-  loop({ state }) {
+  loop({ state, device }) {
+    const { inputs } = device;
+
     let { birdGravity, birdY } = state;
 
     birdGravity += 0.8;
     birdY -= birdGravity;
+
+    if (inputs.pointer.justPressed) {
+      birdGravity = -12;
+    }
 
     return {
       birdGravity,
