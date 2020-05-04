@@ -16,5 +16,6 @@ export const gameProps: GameProps = {
   size: {
     width: 400,
     height: 600,
+    maxHeightMargin: 150,
   },
 };
