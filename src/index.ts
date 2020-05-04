@@ -1,11 +1,11 @@
 import { makeSprite, GameProps } from "@replay/core";
-import { Bird } from "./bird";
+import { Level } from "./level";
 
 export const Game = makeSprite<GameProps>({
   render() {
     return [
-      Bird({
-        id: "bird",
+      Level({
+        id: "level",
       }),
     ];
   },
