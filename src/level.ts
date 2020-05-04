@@ -1,4 +1,4 @@
-import { makeSprite } from "@replay/core";
+import { makeSprite, t } from "@replay/core";
 import { WebInputs } from "@replay/web";
 import { iOSInputs } from "@replay/swift";
 import { Bird } from "./bird";
@@ -40,8 +40,14 @@ export const Level = makeSprite<{}, LevelState, WebInputs | iOSInputs>({
     };
   },
 
-  render({ state }) {
+  render({ state, device }) {
+    const { size } = device;
     return [
+      t.rectangle({
+        color: "#add8e6",
+        width: size.width + size.widthMargin * 2,
+        height: size.height + size.heightMargin * 2,
+      }),
       Bird({
         id: "bird",
         position: {
