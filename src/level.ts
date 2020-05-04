@@ -18,6 +18,18 @@ export const Level = makeSprite<{}, LevelState, WebInputs | iOSInputs>({
     };
   },
 
+  loop({ state }) {
+    let { birdGravity, birdY } = state;
+
+    birdGravity += 0.8;
+    birdY -= birdGravity;
+
+    return {
+      birdGravity,
+      birdY,
+    };
+  },
+
   render({ state }) {
     return [
       Bird({
