@@ -53,6 +53,7 @@ export const Level = makeSprite<{}, LevelState, WebInputs | iOSInputs>({
         position: {
           x: birdX,
           y: state.birdY,
+          rotation: Math.max(-30, state.birdGravity * 3 - 30),
         },
       }),
     ];
