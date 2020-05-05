@@ -17,6 +17,7 @@ type LevelState = {
   birdY: number;
   birdGravity: number;
   pipes: PipeT[];
+  score: number;
 };
 
 export const Level = makeSprite<LevelProps, LevelState, WebInputs | iOSInputs>({
@@ -25,6 +26,7 @@ export const Level = makeSprite<LevelProps, LevelState, WebInputs | iOSInputs>({
       birdY: 10,
       birdGravity: -12,
       pipes: props.paused ? [] : [newPipe(device)],
+      score: 0,
     };
   },
 
@@ -35,7 +37,7 @@ export const Level = makeSprite<LevelProps, LevelState, WebInputs | iOSInputs>({
 
     const { inputs } = device;
 
-    let { birdGravity, birdY, pipes } = state;
+    let { birdGravity, birdY, pipes, score } = state;
 
     birdGravity += 0.8;
     birdY -= birdGravity;
@@ -67,6 +69,7 @@ export const Level = makeSprite<LevelProps, LevelState, WebInputs | iOSInputs>({
       if (!passed && pipe.x < birdX - birdWidth / 2 - pipeWidth / 2) {
         // Mark pipe as having passed bird's x position
         passed = true;
+        score++;
       }
       return { ...pipe, passed, x: pipe.x - speedX };
     });
@@ -75,6 +78,7 @@ export const Level = makeSprite<LevelProps, LevelState, WebInputs | iOSInputs>({
       birdGravity,
       birdY,
       pipes,
+      score,
     };
   },
 
@@ -101,6 +105,15 @@ export const Level = makeSprite<LevelProps, LevelState, WebInputs | iOSInputs>({
           position: { x: pipe.x, y: 0 },
         })
       ),
+      t.text({
+        text: `Score: ${state.score}`,
+        color: "white",
+        position: {
+          x: -device.size.width / 2 + 10,
+          y: device.size.height / 2 + device.size.heightMargin - 20,
+        },
+        anchorX: -1,
+      }),
     ];
   },
 });
