@@ -6,10 +6,10 @@ export const birdHeight = 40;
 export const Bird = makeSprite({
   render() {
     return [
-      t.rectangle({
+      t.image({
+        fileName: "bird.png",
         width: birdWidth,
         height: birdHeight,
-        color: "yellow",
       }),
     ];
   },
