@@ -60,6 +60,7 @@ export const Level = makeSprite<LevelProps, LevelState, WebInputs | iOSInputs>({
     }
 
     if (didHitPipe(birdY, device.size, pipes)) {
+      device.audio("boop.wav").play();
       props.gameOver(state.score);
     }
 
