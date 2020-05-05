@@ -1,15 +1,16 @@
-import { makeSprite, t, Device } from "@replay/core";
+import { makeSprite, t, Device, DeviceSize } from "@replay/core";
 import { WebInputs } from "@replay/web";
 import { iOSInputs } from "@replay/swift";
-import { Bird, birdWidth } from "./bird";
+import { Bird, birdWidth, birdHeight } from "./bird";
 import { isWebInput } from "./utils";
-import { Pipe, PipeT, pipeWidth, pipeGap } from "./pipe";
+import { Pipe, PipeT, pipeWidth, pipeGap, getPipeYPositions } from "./pipe";
 
 const speedX = 2;
 const birdX = 0;
 
 type LevelProps = {
   paused: boolean;
+  gameOver: () => void;
 };
 
 type LevelState = {
@@ -19,11 +20,11 @@ type LevelState = {
 };
 
 export const Level = makeSprite<LevelProps, LevelState, WebInputs | iOSInputs>({
-  init({ device }) {
+  init({ device, props }) {
     return {
       birdY: 10,
       birdGravity: -12,
-      pipes: [newPipe(device)],
+      pipes: props.paused ? [] : [newPipe(device)],
     };
   },
 
@@ -54,6 +55,10 @@ export const Level = makeSprite<LevelProps, LevelState, WebInputs | iOSInputs>({
           (pipe) =>
             pipe.x > -(device.size.width + device.size.widthMargin + pipeWidth)
         );
+    }
+
+    if (didHitPipe(birdY, device.size, pipes)) {
+      props.gameOver();
     }
 
     // Move pipes to the left
@@ -109,4 +114,72 @@ function newPipe(device: Device<{}>): PipeT {
     gapY: randomY,
     passed: false,
   };
+}
+
+function didHitPipe(birdY: number, size: DeviceSize, pipes: PipeT[]) {
+  if (
+    birdY - birdHeight / 2 < -(size.height / 2 + size.heightMargin) ||
+    birdY + birdHeight / 2 > size.height / 2 + size.heightMargin
+  ) {
+    // hit bottom or top
+    return true;
+  }
+  for (const pipe of pipes) {
+    if (
+      pipe.x > birdX + birdWidth / 2 + pipeWidth / 2 ||
+      pipe.x < birdX - birdWidth / 2 - pipeWidth / 2
+    ) {
+      // bird isn't at pipe
+      continue;
+    }
+    const {
+      yUpperTop,
+      yUpperBottom,
+      yLowerTop,
+      yLowerBottom,
+    } = getPipeYPositions(size, pipe.gapY);
+    const topPipeRect = {
+      x: pipe.x,
+      y: (yUpperTop + yUpperBottom) / 2,
+      width: pipeWidth,
+      height: yUpperTop - yUpperBottom,
+    };
+    const bottomPipeRect = {
+      x: pipe.x,
+      y: (yLowerTop + yLowerBottom) / 2,
+      width: pipeWidth,
+      height: yLowerTop - yLowerBottom,
+    };
+    // Check a few points at edges of bird
+    const birdPoints = [
+      { x: birdX + birdWidth / 2, y: birdY + birdHeight / 2 },
+      { x: birdX + birdWidth / 2, y: birdY - birdHeight / 2 },
+      { x: birdX, y: birdY + birdHeight / 2 },
+      { x: birdX, y: birdY - birdHeight / 2 },
+      { x: birdX - birdWidth / 2, y: birdY + birdHeight / 2 },
+      { x: birdX - birdWidth / 2, y: birdY - birdHeight / 2 },
+    ];
+    if (
+      birdPoints.some(
+        (point) =>
+          pointInRect(point, topPipeRect) || pointInRect(point, bottomPipeRect)
+      )
+    ) {
+      // Bird hit a pipe!
+      return true;
+    }
+  }
+  return false;
+}
+
+function pointInRect(
+  point: { x: number; y: number },
+  rect: { x: number; y: number; height: number; width: number }
+) {
+  return (
+    point.x > rect.x - rect.width / 2 &&
+    point.x < rect.x + rect.width / 2 &&
+    point.y > rect.y - rect.height / 2 &&
+    point.y < rect.y + rect.height / 2
+  );
 }
