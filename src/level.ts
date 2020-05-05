@@ -10,7 +10,7 @@ const birdX = 0;
 
 type LevelProps = {
   paused: boolean;
-  gameOver: () => void;
+  gameOver: (score: number) => void;
 };
 
 type LevelState = {
@@ -60,7 +60,7 @@ export const Level = makeSprite<LevelProps, LevelState, WebInputs | iOSInputs>({
     }
 
     if (didHitPipe(birdY, device.size, pipes)) {
-      props.gameOver();
+      props.gameOver(state.score);
     }
 
     // Move pipes to the left

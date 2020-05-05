@@ -5,6 +5,7 @@ import { isWebInput } from "./utils";
 
 type MenuProps = {
   start: () => void;
+  highScore: number;
 };
 
 export const Menu = makeSprite<MenuProps, undefined, WebInputs | iOSInputs>({
@@ -25,6 +26,12 @@ export const Menu = makeSprite<MenuProps, undefined, WebInputs | iOSInputs>({
           : "Tap to Start",
         color: "white",
         position: { x: 0, y: 100 },
+      }),
+      t.text({
+        text: `High score: ${props.highScore}`,
+        font: { name: "Courier", size: 24 },
+        color: "white",
+        position: { x: 0, y: 150 },
       }),
     ];
   },

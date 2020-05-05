@@ -5,25 +5,37 @@ import { Menu } from "./menu";
 type GameState = {
   view: "menu" | "level";
   attempt: number;
+  highScore: number;
 };
 
 export const Game = makeSprite<GameProps, GameState>({
-  init() {
-    return { view: "menu", attempt: 0 };
+  init({ device }) {
+    const store = device.storage.getStore();
+    return {
+      view: "menu",
+      attempt: 0,
+      highScore: Number(store.highScore || "0"),
+    };
   },
 
-  render({ state, updateState }) {
+  render({ state, updateState, device }) {
     const inMenuScreen = state.view === "menu";
 
     return [
       Level({
         id: `level-${state.attempt}`,
         paused: inMenuScreen,
-        gameOver: () => {
+        gameOver: (score) => {
           updateState((prevState) => {
+            let { highScore } = prevState;
+            if (score > highScore) {
+              highScore = score;
+              device.storage.setStore({ highScore: String(highScore) });
+            }
             return {
               ...prevState,
               view: "menu",
+              highScore,
             };
           });
         },
@@ -31,6 +43,7 @@ export const Game = makeSprite<GameProps, GameState>({
       inMenuScreen
         ? Menu({
             id: "menu",
+            highScore: state.highScore,
             start: () => {
               updateState((prevState) => {
                 return {
