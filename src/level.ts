@@ -6,12 +6,16 @@ import { isWebInput } from "./utils";
 
 const birdX = 0;
 
+type LevelProps = {
+  paused: boolean;
+};
+
 type LevelState = {
   birdY: number;
   birdGravity: number;
 };
 
-export const Level = makeSprite<{}, LevelState, WebInputs | iOSInputs>({
+export const Level = makeSprite<LevelProps, LevelState, WebInputs | iOSInputs>({
   init() {
     return {
       birdY: 10,
@@ -19,7 +23,11 @@ export const Level = makeSprite<{}, LevelState, WebInputs | iOSInputs>({
     };
   },
 
-  loop({ state, device }) {
+  loop({ props, state, device }) {
+    if (props.paused) {
+      return state;
+    }
+
     const { inputs } = device;
 
     let { birdGravity, birdY } = state;

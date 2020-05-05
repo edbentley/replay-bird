@@ -1,11 +1,22 @@
 import { makeSprite, GameProps } from "@replay/core";
 import { Level } from "./level";
 
-export const Game = makeSprite<GameProps>({
-  render() {
+type GameState = {
+  view: "menu" | "level";
+};
+
+export const Game = makeSprite<GameProps, GameState>({
+  init() {
+    return { view: "menu" };
+  },
+
+  render({ state }) {
+    const inMenuScreen = state.view === "menu";
+
     return [
       Level({
         id: "level",
+        paused: inMenuScreen,
       }),
     ];
   },
