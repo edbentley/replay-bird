@@ -3,7 +3,7 @@ import { WebInputs } from "@replay/web";
 import { iOSInputs } from "@replay/swift";
 import { Game, gameProps } from "..";
 
-test("gameplay", () => {
+test("Can start game", () => {
   const initInputs: WebInputs | iOSInputs = {
     pointer: {
       pressed: false,
@@ -13,40 +13,29 @@ test("gameplay", () => {
       y: 0,
     },
   };
+  const mainMenuText = "Start";
 
-  const {
-    nextFrame,
-    jumpToFrame,
-    updateInputs,
-    getTexture,
-    audio,
-  } = testGame(Game(gameProps), { initInputs });
-
-  expect(getTexture("icon").props.position).toEqual({
-    x: 0,
-    y: 0,
-    rotation: 0,
+  const { nextFrame, updateInputs, getByText } = testGame(Game(gameProps), {
+    initInputs,
   });
+
+  expect(getByText(mainMenuText)).toBeDefined();
 
   updateInputs({
     pointer: {
-      pressed: true,
-      justPressed: true,
-      justReleased: false,
-      x: 100,
-      y: 100,
+      pressed: false,
+      justPressed: false,
+      justReleased: true,
+      // Note that the pointer position has the same coordinates in all Sprites
+      x: 0,
+      y: 0,
     },
   });
-
   nextFrame();
 
   updateInputs(initInputs);
+  nextFrame();
 
-  expect(audio.play).toBeCalledWith("boop.wav");
-
-  jumpToFrame(() => getTexture("icon").props.position.x > 99.99);
-
-  expect(getTexture("icon").props.position.y).toBeCloseTo(100);
-
-  expect(audio.play).toHaveBeenCalledTimes(1);
+  // Main menu gone, game has started
+  expect(() => getByText(mainMenuText)).toThrowError();
 });
