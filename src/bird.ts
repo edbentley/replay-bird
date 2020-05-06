@@ -7,6 +7,7 @@ export const Bird = makeSprite({
   render() {
     return [
       t.image({
+        testId: "bird",
         fileName: "bird.png",
         width: birdWidth,
         height: birdHeight,
