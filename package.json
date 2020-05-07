@@ -1,8 +1,8 @@
 {
-  "name": "replay-starter-ts",
+  "name": "replay-bird",
   "private": true,
   "version": "0.1.1",
-  "description": "A starter template for building a Replay game (TypeScript)",
+  "description": "A game for the Replay tutorial",
   "main": "src/index.ts",
   "scripts": {
     "start": "webpack-dev-server --config ./web/webpack.config.js --open",
