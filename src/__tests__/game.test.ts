@@ -1,4 +1,4 @@
-import { testGame } from "@replay/test";
+import { testSprite } from "@replay/test";
 import { WebInputs } from "@replay/web";
 import { iOSInputs } from "@replay/swift";
 import { Game, gameProps } from "..";
@@ -24,7 +24,7 @@ test("Can reach a score of 2", () => {
     getByText,
     jumpToFrame,
     audio,
-  } = testGame(Game(gameProps), {
+  } = testSprite(Game(gameProps), gameProps, {
     initInputs,
     // First two pipes will have gap in middle, third pipe lower down
     initRandom: [0.5, 0.5, 0],
@@ -52,7 +52,7 @@ test("Can reach a score of 2", () => {
 
   // Keeps the bird hovering in the middle to pass the first 2 pipes
   function keepBirdInMiddle() {
-    if (getTexture("bird").props.position.y < -pipeGap / 2 + birdHeight + 20) {
+    if (getTexture("bird").props.y < -pipeGap / 2 + birdHeight + 20) {
       updateInputs({
         pointer: {
           pressed: true,
