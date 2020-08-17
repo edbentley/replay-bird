@@ -1,6 +1,20 @@
-import { makeSprite, GameProps } from "@replay/core";
+import { makeSprite, GameProps, t } from "@replay/core";
+import { RenderCanvasOptions } from "@replay/web";
 import { Level } from "./level";
 import { Menu } from "./menu";
+
+export const options: RenderCanvasOptions = {
+  loadingTextures: [
+    t.text({
+      color: "black",
+      text: "Loading...",
+    }),
+  ],
+  assets: {
+    imageFileNames: ["bird.png"],
+    audioFileNames: ["boop.wav"],
+  },
+};
 
 type GameState = {
   view: "menu" | "level";

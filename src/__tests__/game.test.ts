@@ -9,19 +9,22 @@ test("Can reach a score of 2", () => {
   const initInputs: WebInputs | iOSInputs = {
     pointer: {
       pressed: false,
+      numberPressed: 0,
       justPressed: false,
       justReleased: false,
       x: 0,
       y: 0,
     },
+    keysDown: {},
+    keysJustPressed: {},
   };
   const mainMenuText = "Start";
 
   const {
     nextFrame,
     updateInputs,
-    getTexture,
     getByText,
+    getTexture,
     jumpToFrame,
     audio,
   } = testSprite(Game(gameProps), gameProps, {
@@ -35,12 +38,14 @@ test("Can reach a score of 2", () => {
   updateInputs({
     pointer: {
       pressed: false,
+      numberPressed: 1,
       justPressed: false,
       justReleased: true,
-      // Note that the pointer position has the same coordinates in all Sprites
       x: 0,
       y: 0,
     },
+    keysDown: {},
+    keysJustPressed: {},
   });
   nextFrame();
 
@@ -56,11 +61,14 @@ test("Can reach a score of 2", () => {
       updateInputs({
         pointer: {
           pressed: true,
+          numberPressed: 1,
           justPressed: true,
           justReleased: false,
           x: 0,
           y: 0,
         },
+        keysDown: {},
+        keysJustPressed: {},
       });
       nextFrame();
 
