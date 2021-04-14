@@ -1,9 +1,8 @@
-const fs = require("fs");
 const path = require("path");
-const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const webpack = require("webpack");
 
 module.exports = {
   entry: "./web/index.ts",
@@ -27,15 +26,14 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new CopyWebpackPlugin([
-      { from: "assets/images" },
-      { from: "assets/audio" },
-    ]),
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "index.html"),
+    new CopyWebpackPlugin({
+      patterns: [{ from: "assets/images" }, { from: "assets/audio" }],
     }),
     new webpack.DefinePlugin({
-      ASSET_NAMES: JSON.stringify(getAssetNames()),
+      PLATFORM: JSON.stringify("web"),
+    }),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, "index.html"),
     }),
   ],
   output: {
@@ -44,19 +42,7 @@ module.exports = {
   },
   devServer: {
     host: "0.0.0.0",
+    // Codesandbox support
+    disableHostCheck: true,
   },
 };
-
-function getAssetNames() {
-  const imageFileNames = fs
-    .readdirSync(path.resolve(__dirname, "../assets/images"))
-    .filter((fileName) => !fileName.startsWith("."));
-  const audioFileNames = fs
-    .readdirSync(path.resolve(__dirname, "../assets/audio"))
-    .filter((fileName) => !fileName.startsWith("."));
-
-  return {
-    imageFileNames,
-    audioFileNames,
-  };
-}

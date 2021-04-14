@@ -50,3 +50,10 @@ npm run build-swift
 open swift/replay-bird.xcodeproj/
 # run in Xcode
 ```
+
+## Run on Android
+
+```bash
+npm run build-android
+# open /android in Android Studio and run project
+```

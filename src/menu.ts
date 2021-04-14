@@ -8,8 +8,8 @@ type MenuProps = {
 };
 
 export const Menu = makeSprite<MenuProps, undefined, WebInputs | iOSInputs>({
-  render({ props, device }) {
-    const { inputs } = device;
+  render({ props, getInputs, device }) {
+    const inputs = getInputs();
 
     if (inputs.pointer.justReleased || inputs.keysJustPressed[" "]) {
       props.start();
@@ -25,7 +25,7 @@ export const Menu = makeSprite<MenuProps, undefined, WebInputs | iOSInputs>({
       }),
       t.text({
         text: `High score: ${props.highScore}`,
-        font: { name: "Courier", size: 24 },
+        font: { family: "Courier", size: 24 },
         color: "white",
         y: 150,
       }),

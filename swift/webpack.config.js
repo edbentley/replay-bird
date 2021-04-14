@@ -1,4 +1,3 @@
-const fs = require("fs");
 const path = require("path");
 const webpack = require("webpack");
 
@@ -9,36 +8,27 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        use: "ts-loader",
+        use: [
+          {
+            loader: "ts-loader",
+            options: { transpileOnly: true },
+          },
+        ],
         exclude: /node_modules/,
       },
     ],
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      PLATFORM: JSON.stringify("ios"),
+    }),
+  ],
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
   },
-  plugins: [
-    new webpack.DefinePlugin({
-      ASSET_NAMES: JSON.stringify(getAssetNames()),
-    }),
-  ],
   output: {
     filename: "game.js",
     path: path.resolve(__dirname, "."),
     library: "game",
   },
 };
-
-function getAssetNames() {
-  const imageFileNames = fs.readdirSync(
-    path.resolve(__dirname, "../assets/images")
-  );
-  const audioFileNames = fs.readdirSync(
-    path.resolve(__dirname, "../assets/audio")
-  );
-
-  return {
-    imageFileNames,
-    audioFileNames,
-  };
-}
